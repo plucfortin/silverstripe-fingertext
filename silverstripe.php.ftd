@@ -1,0 +1,191 @@
+textfield
+Lang:PHP
+new TextField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+textareafield
+Lang:PHP
+new TextareaField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+page
+Lang:PHP
+class MyPage extends Page{
+    
+    static $db = array(
+        'Param1' => 'Text',
+        'Param1' => 'Text'
+    );
+    
+    static $has_one = array(
+        'Relation1' => 'Class1',
+        'Relation2' => 'Class2'
+    );
+    
+    static $has_many = array(
+        'Relations1' => 'Class1',
+        'Relations2' => 'Class2'
+    );
+    
+    static $many_many = array(
+        'Relations1' => 'Class1',
+        'Relations2' => 'Class2'
+    );
+    
+    static $belongs_many_many = array(
+        'Relations1' => 'Class1',
+        'Relations2' => 'Class2'
+    );
+    
+    static $singular_name = 'My Page';
+    static $plural_name = 'My Pages';
+    
+    static $field_labels = array(
+        'Param1' => 'Premier Paramètre',
+        'Param2' => 'Deuxième Paramètre'
+    );
+    
+    public function getCMSFields(){
+        $fieldSet = parent::getCMSFields();
+        $jobsTable = new ComplexTableField($this, 'Jobs', 'Job');
+        $fieldSet->addFieldToTab('Root.Content.Jobs', $jobsTable);
+        return $fieldSet;
+    }
+    
+}
+
+class MyPage_Controller extends Page_Controller{
+    
+    public function __construct(
+        parent::__construct();
+    );
+    
+}
+
+
+[>END<]!$[FingerTextData FingerTextData]@#
+numericfield
+Lang:PHP
+new NumericField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+many_many
+Lang:PHP
+static $many_many = array(
+    'Relations1' => 'DataObjectClass1',
+    'Relations2' => 'DataObjectClass2'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+has_one
+Lang:PHP
+static $has_one = array(
+    'Relation1' => 'DataObjectClass1',
+    'Relation2' => 'DataObjectClass2'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+has_many
+Lang:PHP
+static $has_many = array(
+    'Relations1' => 'DataObjectClass1',
+    'Relations2' => 'DataObjectClass2'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+getcmsfields
+Lang:PHP
+// getCMSFields pour une relation / liste de DataObject:
+public function getCMSFields(){
+    $fieldSet = parent::getCMSFields();
+    $jobsTable = new ComplexTableField($this, 'Jobs', 'Job');
+    $fieldSet->addFieldToTab('Root.Content.Jobs', $jobsTable);
+    return $fieldSet;
+}
+// getCMSFields pour un popup / DataObject unique:
+public function getCMSFields(){
+    $fieldSet = new FieldSet(
+        new TextField('Title', 'Job Title'), // (Champ, Étiquette)
+        new TextareaField('Description', 'Job Description'),
+        new DateField('ExpiryDate', 'Expiry Date')
+    );
+    return $fieldSet;
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+fieldset
+Lang:PHP
+new FieldSet(
+    $[![(cha)textfield]!],          /* Single-line text input area */
+    $[![(cha)textareafield]!],      /* Multi-line plaintext input area */
+    $[![(cha)emailfield]!],         /* Entry of an email address with format validation */
+    $[![(cha)numericfield]!],       /* Limits input to numeric values */
+    $[![(cha)datefield]!],          /* Date input as a single text field */
+    $[![(cha)headerfield]!],        /* Creates an HTML heading (not editable) */
+    $[![(cha)literalfield]!],       /* Displays arbitrary text or HTML (not editable) */
+    $[![(cha)checkboxfield]!],      /* Displays a single checkbox */
+    $[![(cha)dropdownfield]!],      /* A dropdown from an array of options */
+    $[![(cha)optionsetfield]!],     /* A set of radiobuttons. The value to be selected by default can optionally be passed-in as a second parameter */
+    $[![(cha)checkboxsetfield]!]    /* A set of checkboxes. This field can optionally save into a relationship */
+)
+[>END<]!$[FingerTextData FingerTextData]@#
+field_labels
+Lang:PHP
+static $field_labels = array(
+    'Param1' => 'Premier Paramètre',
+    'Param2' => 'Deuxième Paramètre'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+emailfield
+Lang:PHP
+new EmailField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+db
+Lang:PHP
+static $db = array(
+    'Param1' => 'Varchar(255)', //Max 255 characters
+    'Param2' => 'Text',
+    'Param3' => 'HTMLText',
+    'Param4' => 'Enum',
+    'Param5' => 'Boolean',
+    'Param6' => 'Int',
+    'Param7' => 'Decimal',
+    'Param8' => 'Float',
+    'Param9' => 'Double',
+    'Param10' => 'Currency',
+    'Param11' => 'Percentage',
+    'Param12' => 'Date',
+    'Param13' => 'Time',
+    'Param14' => 'SSDateTime'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+datefield
+Lang:PHP
+new DateField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+dataobject
+Lang:PHP
+class myclass extends DataObject{
+    
+    $[![(cha)db]!]
+    $[![(cha)has_one]!]
+    $[![(cha)has_many]!]
+    $[![(cha)many_many]!]
+    $[![(cha)belongs_many_many]!]
+    static $singular_name = 'My Class';
+    static $plural_name = 'My Classes';
+    
+    $[![(cha)field_labels]!]
+    
+    // getCMSFields pour un popup / DataObject unique:
+    public function getCMSFields(){
+        $fieldSet = new FieldSet(
+            new TextField('Title', 'Job Title'), // (Champ, Étiquette)
+            new TextareaField('Description', 'Job Description'),
+            new DateField('ExpiryDate', 'Expiry Date')
+        );
+        return $fieldSet;
+    }
+    
+    public function Link(){
+        return $this->PageRelation()->Link() . '#myclass' . $this->ID;
+    }
+    
+    
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+belongs_many_many
+Lang:PHP
+static $belongs_many_many = array(
+    'Relations1' => 'DataObjectClass1',
+    'Relations2' => 'DataObjectClass2'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
