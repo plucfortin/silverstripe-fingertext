@@ -4,6 +4,12 @@ new TextField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextDat
 textareafield
 Lang:PHP
 new TextareaField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+requiredfields
+Lang:PHP
+new RequiredFields(
+    'RequiredField1_Name',
+    'RequiredField2_Name'
+)[>END<]!$[FingerTextData FingerTextData]@#
 page
 Lang:PHP
 class MyPage extends Page{
@@ -60,6 +66,9 @@ class MyPage_Controller extends Page_Controller{
 
 
 [>END<]!$[FingerTextData FingerTextData]@#
+optionsetfield
+Lang:PHP
+new OptionsetField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 numericfield
 Lang:PHP
 new NumericField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
@@ -70,6 +79,12 @@ static $many_many = array(
     'Relations2' => 'DataObjectClass2'
 );
 [>END<]!$[FingerTextData FingerTextData]@#
+literalfield
+Lang:PHP
+new LiteralField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+headerfield
+Lang:PHP
+new HeaderField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 has_one
 Lang:PHP
 static $has_one = array(
@@ -103,32 +118,77 @@ public function getCMSFields(){
     return $fieldSet;
 }
 [>END<]!$[FingerTextData FingerTextData]@#
+formfunction
+Lang:PHP
+public function Form(){
+    
+    $fieldSet = $[![(cha)fieldset]!];
+    
+    $actionSet = $[![(cha)actionset]!];
+    
+    $validator = $[![(cha)requiredfields]!];
+    
+    $form = $[![(cha)form]!];
+    
+    return $form;
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+formaction
+Lang:PHP
+public function formaction($data, $form){
+    
+    $dataobjectSubclassObject = new DataObjectSubclass();
+    
+    $form->saveInto($dataobjectSubclassObject);
+    
+    $dataobjectSubclassObject->write();
+    
+    $form->sessionMessage(
+        'Form Successfully Submitted',  //
+        'Good'                          //
+    );
+
+    Director::redirectBack();
+    return();
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+form
+Lang:PHP
+new Form(
+    $this,          // The Controller that will handle the form submission
+    'Form',         // Name of the form object. Name of the controller method to access the forms content.
+    $fieldSet,      // The fieldset that contains all the fields of the form, except the submit fields
+    $actionSet,       // The fieldset that contains the submit buttons
+    $validator      // The form validation object
+)[>END<]!$[FingerTextData FingerTextData]@#
 fieldset
 Lang:PHP
 new FieldSet(
-    $[![(cha)textfield]!],          /* Single-line text input area */
-    $[![(cha)textareafield]!],      /* Multi-line plaintext input area */
-    $[![(cha)emailfield]!],         /* Entry of an email address with format validation */
-    $[![(cha)numericfield]!],       /* Limits input to numeric values */
-    $[![(cha)datefield]!],          /* Date input as a single text field */
-    $[![(cha)headerfield]!],        /* Creates an HTML heading (not editable) */
-    $[![(cha)literalfield]!],       /* Displays arbitrary text or HTML (not editable) */
-    $[![(cha)checkboxfield]!],      /* Displays a single checkbox */
-    $[![(cha)dropdownfield]!],      /* A dropdown from an array of options */
-    $[![(cha)optionsetfield]!],     /* A set of radiobuttons. The value to be selected by default can optionally be passed-in as a second parameter */
-    $[![(cha)checkboxsetfield]!]    /* A set of checkboxes. This field can optionally save into a relationship */
-)
-[>END<]!$[FingerTextData FingerTextData]@#
+    $[![(cha)textfield]!],          // Single-line text input area
+    $[![(cha)textareafield]!],      // Multi-line plaintext input area
+    $[![(cha)emailfield]!],         // Entry of an email address with format validation
+    $[![(cha)numericfield]!],       // Limits input to numeric values
+    $[![(cha)datefield]!],          // Date input as a single text field
+    $[![(cha)headerfield]!],        // Creates an HTML heading (not editable)
+    $[![(cha)literalfield]!],       // Displays arbitrary text or HTML (not editable)
+    $[![(cha)checkboxfield]!],      // Displays a single checkbox
+    $[![(cha)dropdownfield]!],      // A dropdown from an array of options
+    $[![(cha)optionsetfield]!],     // A set of radiobuttons. The value to be selected by default can optionally be passed-in as a second parameter
+    $[![(cha)checkboxsetfield]!]    // A set of checkboxes. This field can optionally save into a relationship
+)[>END<]!$[FingerTextData FingerTextData]@#
 field_labels
 Lang:PHP
 static $field_labels = array(
-    'Param1' => 'Premier Paramètre',
-    'Param2' => 'Deuxième Paramètre'
+    'Param1' => 'First Parameter Label',
+    'Param2' => 'Second Parameter Label'
 );
 [>END<]!$[FingerTextData FingerTextData]@#
 emailfield
 Lang:PHP
 new EmailField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+dropdownfield
+Lang:PHP
+new DropdownField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 db
 Lang:PHP
 static $db = array(
@@ -182,6 +242,12 @@ class myclass extends DataObject{
     
 }
 [>END<]!$[FingerTextData FingerTextData]@#
+checkboxsetfield
+Lang:PHP
+new CheckboxsetField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+checkboxfield
+Lang:PHP
+new CheckboxField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 belongs_many_many
 Lang:PHP
 static $belongs_many_many = array(
@@ -189,3 +255,9 @@ static $belongs_many_many = array(
     'Relations2' => 'DataObjectClass2'
 );
 [>END<]!$[FingerTextData FingerTextData]@#
+actionset
+Lang:PHP
+new FieldSet(
+    new FormAction('action_method1_name','submit_button1_text'),
+    new FormAction('action_method2_name','submit_button2_text')
+)[>END<]!$[FingerTextData FingerTextData]@#
