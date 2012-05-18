@@ -1,56 +1,190 @@
+widget
+Lang:PHP
+// This snippet is an example of a Widget Subclass
+
+class NewMembersWidget extends Widget {
+
+    static $db = array(
+        "Limit" => "Int"
+    );
+    
+    static $defaults = array(
+        "Limit" => 3
+    );
+    
+    static $title = "New Users";        // The title of the Widget in the frontend, availaible in templates with the $Title placeholder
+    static $cmsTitle = "New Users";     // The title of the widget in the CMS
+    static $description = "A list of newly registered users";   // Will appear in the CMS
+    
+    // You can optionnally add placeholders for your templates, for example:
+        function Members() {
+            return DataObject::get(
+                'Member',           // Class representing the TABLE queried
+                null,               // "WHERE" CLAUSE
+                'Created DESC',     // "ORDER BY" CLAUSE
+                null,               // "JOIN" Clause
+                $this->Limit        // "LIMIT" CLAUSE
+            );
+        }
+    
+    // If your widget has database fields,
+    // you need to add them to override getCMSFields:
+        function getCMSFields() {
+            return new FieldSet(
+                new NumericField(
+                    "Limit",                            // the name of the field
+                    "Maximum number of users to show"   // the label of the field
+                )
+            );
+        }
+}
+
+[>END<]!$[FingerTextData FingerTextData]@#
+translatekey
+Lang:PHP
+$lang['fr_CA']['Namespace']['KEY'] = '';[>END<]!$[FingerTextData FingerTextData]@#
+translate
+Lang:PHP
+_t('MyNamespace.KEY')[>END<]!$[FingerTextData FingerTextData]@#
+tkey
+Lang:PHP
+$[![(cha)translatekey]!][>END<]!$[FingerTextData FingerTextData]@#
 textfield
 Lang:PHP
 new TextField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 textareafield
 Lang:PHP
 new TextareaField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+t
+Lang:PHP
+$[![(cha)translate]!][>END<]!$[FingerTextData FingerTextData]@#
+searchable_fields
+Lang:PHP
+// searchable_fields tells silverstripe which attributes
+// to include in a search. This is used, for example,
+// in the ModelAdmin search feature :
+static $searchable_fields = array(
+    'Field1',
+    'Field2',
+    'Relation1.Field1'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
 requiredfields
 Lang:PHP
 new RequiredFields(
     'RequiredField1_Name',
     'RequiredField2_Name'
 )[>END<]!$[FingerTextData FingerTextData]@#
+queries
+Lang:PHP
+
+$callerClass = 'Member';
+$filter = '';
+$sort = '';
+$join = '';
+$limit = '';
+$containerClass = 'DataObjectSet';
+
+$dataobjectSet = DataObject::get(   
+    $callerClass,       // Mandatory. Class of the Model representing the table to query
+    $filter,            // Optionnal. WHERE Clause
+    $sort,              // Optionnal. ORDER BY Clause
+    $join,              // Optionnal. JOIN Clause
+    $limit,             // Optionnal. LIMIT Clause
+    $containerClass     // Optionnal. The class in which the results will be wrapped. Defaults to 'DataObjectSet'
+);
+[>END<]!$[FingerTextData FingerTextData]@#
+providepermissions
+Lang:PHP
+// The providePermissions() function adds new
+// permissions that can be allocated to security
+// groups or security roles in the admin panel.
+// The keys becomes available to the class method :
+// Permission::check('MY_PERMISION_CODE_1') 
+public function providePermissions(){        
+    return array(
+        'MY_PERMISION_CODE_1' => array(
+            'category' => 'My Permission Category',     // category key is mandatory
+            'name' => 'My Permission Name 1',           // name key is mandatory
+            'help' => 'My help message 1',              // help key is optional
+            'sort' => 0                                 // sort key is optional
+        ),
+        'MY_PERMISION_CODE_2' => array(
+            'category' => 'My Permission Category',
+            'name' => 'My Permission Name 2',
+            'help' => 'My help message 2',
+            'sort' => 0 
+        )
+    );  
+    // TIP: For the array values, you can use _t function to use translated strings.
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+permissionprovider
+Lang:PHP
+class MyPermissionProvider implements PermissionProvider{
+    
+    public function __construct(){
+    
+    }
+    
+    $[![(cha)providepermissions]!]
+}
+[>END<]!$[FingerTextData FingerTextData]@#
 page
 Lang:PHP
 class MyPage extends Page{
     
-    static $db = array(
-        'Param1' => 'Text',
-        'Param1' => 'Text'
+    public function init() {
+        parent::init();
+        
+        // Insert any initializing code here...
+    }
+    
+    // $allowed_children defines the sub-pages classes
+    // that can be nested under pages of type MyPage:
+    static $allowed_children = array(
+        'SubClass1',
+        'SubClass2'
     );
+    
+    $[![(cha)db]!]
     
     static $has_one = array(
         'Relation1' => 'Class1',
-        'Relation2' => 'Class2'
+        'Relation2' => 'Class2',
+        "MyWidgetArea1" => "WidgetArea",    // That's how you add a widgetarea to a page
+        "MyWidgetArea2" => "WidgetArea"     // And you can add as many widgetarea you need
+                                            // MyWidgetArea1 and MyWidgetArea2 are now available as
+                                            // placeholders in your .ss template files.
     );
     
-    static $has_many = array(
-        'Relations1' => 'Class1',
-        'Relations2' => 'Class2'
-    );
-    
-    static $many_many = array(
-        'Relations1' => 'Class1',
-        'Relations2' => 'Class2'
-    );
-    
-    static $belongs_many_many = array(
-        'Relations1' => 'Class1',
-        'Relations2' => 'Class2'
-    );
+    $[![(cha)has_many]!]
+    $[![(cha)many_many]!]
+    $[![(cha)belongs_many_many]!]
+    $[![(cha)defaults]!]
     
     static $singular_name = 'My Page';
     static $plural_name = 'My Pages';
     
-    static $field_labels = array(
-        'Param1' => 'Premier Paramètre',
-        'Param2' => 'Deuxième Paramètre'
-    );
+    $[![(cha)field_labels]!]
+    $[![(cha)searchable_fields]!]
+    
+    $[![(cha)hooks]!]
+    $[![(cha)can]!]
     
     public function getCMSFields(){
         $fieldSet = parent::getCMSFields();
-        $jobsTable = new ComplexTableField($this, 'Jobs', 'Job');
-        $fieldSet->addFieldToTab('Root.Content.Jobs', $jobsTable);
+        
+        // If your page has relations and you want to manage them in the cms:
+        // (This is an example with a has_many relation named 'Jobs', containing objects of type 'Job')
+            $jobsTable = new ComplexTableField($this, 'Jobs', 'Job');
+            $fieldSet->addFieldToTab('Root.Content.Jobs', $jobsTable);
+        
+        // If your page has a widgetarea and you want to manage the widget it contains in the cms:
+            $fieldSet->addFieldToTab("Root.Content.Widgets",
+                new WidgetAreaEditor("MyWidgetArea1")   // The parameter is the name of an has_one relation containing an Object of type 'WidgetArea'
+            );
+        
         return $fieldSet;
     }
     
@@ -62,6 +196,46 @@ class MyPage_Controller extends Page_Controller{
         parent::__construct();
     );
     
+    // Leave this array empty and all actions will allowed by default :
+    public static $allowed_actions = array (    // Ex.:
+        'action1',                   // anyone can access this action
+        'action2' => true,           // anyone can access this action (same as above)
+        'action3' => 'ADMIN',        // you must have ADMIN permissions to access this action
+        'action4' => '->checkAction' // you can only access this action if $this->checkAction() returns true
+    );
+    
+    // We must define the actions we have allowed. For Example: 
+    public function action1(){
+        // In this example, we check if the current user have the 
+        // ADMIN permission code with "Permission::check('ADMIN')" :
+        if(Permission::check('ADMIN')){
+            // Code to execute if the the current user is an ADMIN
+        }else{
+            // Code to execute if the current user is not an ADMIN
+        }
+    }
+    
+    public function action2(){
+        // In this example, we check if the a specific user have the 
+        // ADMIN permission code with "Permission::checkMember($some_member,'ADMIN')" :
+        $member_id = 1;
+        $some_member = DataObject::get_by_id('Member', $member_id);
+        if(Permission::checkMember('ADMIN')){
+            // Code to execute if the the current user is an ADMIN
+        }else{
+            // Code to execute if the current user is not an ADMIN
+        }
+    }
+    
+    public function action3(){
+        // In this third example, we check if the canView Permission:
+        if($this->canView()){
+            // Code to execute if we can view
+        }else{
+            // Code to execute if we cannot view
+        }
+    }
+    
 }
 
 
@@ -72,6 +246,33 @@ new OptionsetField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTe
 numericfield
 Lang:PHP
 new NumericField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+modeladmin
+Lang:PHP
+class MyModelAdmin extends ModelAdmin {
+    
+    // Define which models will be managed with this interface
+    // Each listed model will have it's own tab in the interface:
+    static $managed_models = array(
+        'ModelClass1',
+        'ModelClass2'
+    );
+    
+    // Set the URL of this admin page:
+    static $url_segment = 'my-model';   // URL will be: /admin/my-model
+    
+    // For a CSV file import interface:
+    static $model_importers = array(
+        'ModelClass1' => 'ModelClass1CsvBulkLoader'
+        // info: you will need to implement the
+        // corresponding subclass of CsvBulkLoader
+    );
+    
+    // info: Requires /dev/build
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+member
+Lang:PHP
+Member::CurrentMember()[>END<]!$[FingerTextData FingerTextData]@#
 many_many
 Lang:PHP
 static $many_many = array(
@@ -82,6 +283,38 @@ static $many_many = array(
 literalfield
 Lang:PHP
 new LiteralField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+hooks_sitetree
+Lang:PHP
+public function onBeforePublish(){
+    if($this->ID){
+        // code here...
+    }
+}
+
+$[![(cha)hooks]!]
+[>END<]!$[FingerTextData FingerTextData]@#
+hooks
+Lang:PHP
+// Hooks :
+public function onBeforeWrite(){
+    if(!$this->ID){
+        // code here...
+    }
+}
+
+public function onAfterWrite(){
+    if($this->ID){
+        // code here...
+    }
+}
+
+public function onBeforeDelete(){
+    if($this->ID){
+        // code here...
+    }
+}
+
+[>END<]!$[FingerTextData FingerTextData]@#
 headerfield
 Lang:PHP
 new HeaderField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
@@ -101,17 +334,31 @@ static $has_many = array(
 [>END<]!$[FingerTextData FingerTextData]@#
 getcmsfields
 Lang:PHP
-// getCMSFields pour une relation / liste de DataObject:
+// getCMSFields for a set of related dataobjects:
 public function getCMSFields(){
     $fieldSet = parent::getCMSFields();
-    $jobsTable = new ComplexTableField($this, 'Jobs', 'Job');
+    $jobsTable = new ComplexTableField(
+        $this,  // The controller that creates the instance of ComplexTableField
+        'Jobs', // The name of the relation
+        'Job',  // The the class of the objects contained in the relation
+        array(  // An array to customize the field_labels. This will override the $field_labels static.
+            'Param1' => 'First Parameter',
+            'Param2' => 'Second Parameter'
+        )   
+    );
+    /* Infos on ComplexTableField:
+        By default, the columns are defined with the 'Title' and 'Description' db fields.
+        However, if they're not defined, the 'ID' db field will be used instead.
+        You can customize the displayed columns if, as 4th parameter, you
+        provide and associative array with field_names as keys and label strings as values.
+    */
     $fieldSet->addFieldToTab('Root.Content.Jobs', $jobsTable);
     return $fieldSet;
 }
 // getCMSFields pour un popup / DataObject unique:
 public function getCMSFields(){
     $fieldSet = new FieldSet(
-        new TextField('Title', 'Job Title'), // (Champ, Étiquette)
+        new TextField('Title', 'Job Title'), // (FieldName, Label)
         new TextareaField('Description', 'Job Description'),
         new DateField('ExpiryDate', 'Expiry Date')
     );
@@ -180,15 +427,40 @@ field_labels
 Lang:PHP
 static $field_labels = array(
     'Param1' => 'First Parameter Label',
-    'Param2' => 'Second Parameter Label'
+    'Param2' => 'Second Parameter Label',
+    'Relation1.Param1' => 'Relation1 First Parameter Label'
 );
 [>END<]!$[FingerTextData FingerTextData]@#
 emailfield
 Lang:PHP
 new EmailField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+email
+Lang:PHP
+$email_from = Email::getAdminEmail();
+$email_to = $member->Email();
+$subject = 'This is the subject of the email';
+$body = '<p>This is the body of the email</p>';
+
+$email = new Email(
+    $email_from,
+    $email_to,
+    $subject,
+    $body
+);
+
+$email->send();
+[>END<]!$[FingerTextData FingerTextData]@#
 dropdownfield
 Lang:PHP
 new DropdownField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+defaults
+Lang:PHP
+// Provide default values to db fields and relations: 
+static $defaults = array(
+    'Param1' => 'My default value',
+    'Relation1' => null
+);
+[>END<]!$[FingerTextData FingerTextData]@#
 db
 Lang:PHP
 static $db = array(
@@ -215,39 +487,84 @@ dataobject
 Lang:PHP
 class myclass extends DataObject{
     
+    public __construct($record = null ,$isSingleton = false){
+        parent::__construct($record, $isSingleton);
+        
+        // Insert any initializing code here...        
+    };
+    
     $[![(cha)db]!]
     $[![(cha)has_one]!]
     $[![(cha)has_many]!]
     $[![(cha)many_many]!]
     $[![(cha)belongs_many_many]!]
+    $[![(cha)defaults]!]
     static $singular_name = 'My Class';
     static $plural_name = 'My Classes';
     
     $[![(cha)field_labels]!]
+    $[![(cha)searchable_fields]!]
     
-    // getCMSFields pour un popup / DataObject unique:
+    $[![(cha)hooks]!]
+    $[![(cha)can]!]
+    
+    // getCMSFields that will be used in a popup window in the CMS:
     public function getCMSFields(){
         $fieldSet = new FieldSet(
-            new TextField('Title', 'Job Title'), // (Champ, Étiquette)
+            new TextField('Title', 'Job Title'), // (FieldName, Label)
             new TextareaField('Description', 'Job Description'),
             new DateField('ExpiryDate', 'Expiry Date')
         );
         return $fieldSet;
     }
     
+    // Sometimes, dataobjects need a Link method to work properly. For example :
     public function Link(){
         return $this->PageRelation()->Link() . '#myclass' . $this->ID;
     }
     
     
+    
+    
 }
 [>END<]!$[FingerTextData FingerTextData]@#
+currentuserid
+Lang:PHP
+Member::CurrentUserID()[>END<]!$[FingerTextData FingerTextData]@#
+currentuser
+Lang:PHP
+Member::CurrentUser()[>END<]!$[FingerTextData FingerTextData]@#
+currentmemberid
+Lang:PHP
+Member::CurrentUserID()[>END<]!$[FingerTextData FingerTextData]@#
+currentmember
+Lang:PHP
+Member::CurrentUser()[>END<]!$[FingerTextData FingerTextData]@#
 checkboxsetfield
 Lang:PHP
 new CheckboxsetField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
 checkboxfield
 Lang:PHP
 new CheckboxField('field_name', 'field_label')[>END<]!$[FingerTextData FingerTextData]@#
+can
+Lang:PHP
+public function canView($member = null) {return true;}
+
+public function canCreate($member = null) {return true;}
+
+public function canEdit($member = null) {
+    if(!$member) $member = Member::currentUser();
+    if(!$member) return false;
+    return (
+        Permission::checkMember($member, 'ADMIN')
+        | | ($member && $member->ID == $this->ID)
+    );
+}
+
+public function canDelete($member = null) {
+    return $this->canEdit($member);
+}
+[>END<]!$[FingerTextData FingerTextData]@#
 belongs_many_many
 Lang:PHP
 static $belongs_many_many = array(
@@ -255,9 +572,214 @@ static $belongs_many_many = array(
     'Relations2' => 'DataObjectClass2'
 );
 [>END<]!$[FingerTextData FingerTextData]@#
+back
+Lang:PHP
+Director::redirectBack();
+[>END<]!$[FingerTextData FingerTextData]@#
 actionset
 Lang:PHP
 new FieldSet(
     new FormAction('action_method1_name','submit_button1_text'),
     new FormAction('action_method2_name','submit_button2_text')
 )[>END<]!$[FingerTextData FingerTextData]@#
+action
+Lang:PHP
+public function myaction(){
+    // code here ...
+    
+    Director::RedirectBack();
+    return;
+}
+[>END<]!$[FingerTextData FingerTextData]@#
+translate
+Lang:ASP
+<% _t("MyNamespace.KEY") %>[>END<]!$[FingerTextData FingerTextData]@#
+t
+Lang:ASP
+$[![(cha)translate]!][>END<]!$[FingerTextData FingerTextData]@#
+placeholders
+Lang:ASP
+$[![(cha)ph]!][>END<]!$[FingerTextData FingerTextData]@#
+ph_dates
+Lang:ASP
+// Placeholder methods related to dates.
+$MyDate.Nice            // Returns the date in a human-readable format. Ex. '20/01/2009'
+$MyDate.Long            // Returns the date in a long format. Ex. 'January 20th, 2009'
+$MyDate.DayOfMonth      // Returns the date of the month. Ex. '20'
+$MyDate.Day             // Returns the date of the week. Ex. 'Monday'
+$MyDate.Range(date)     // Returns the range between MyDate and the date parameter. Ex. 'January 20th-August 20th'
+$MyDate.Format(format)  // Rewrites the date using the php date() function. Ex. 'Y-m-d'
+$MyDate.ShortMonth      // Returns the month in shortand format. Ex. 'Jan'
+$MyDate.Year            // Returns the year in four-digit format. Ex. '2009'
+$MyDate.Time            // Returns the time in 12-hour format. Ex. '1:30pm'
+$MyDate.Time24          // Returns the time in 24-hour format. Ex. '13:30'
+$MyDate.Ago             // Returns a string telling how long ago or how far in the future. Ex. '5 minutes ago' or '12 days away'
+[>END<]!$[FingerTextData FingerTextData]@#
+ph_dataobjectset
+Lang:ASP
+// Placeholders inherited from DataObjectSet :
+    $EvenOdd            // Returns 'even' or 'odd'. First element is 1, therefore 'odd'.
+    $FirstLast          // Returns 'first', 'last', or an empty string if in middle
+    $Pos                // Returns the sequence number in the set. The set begins at position 1
+    $TotalItems         // Returns the total number of item in the DataObjectSet
+    $Top                // Prefix to access placeholders from the outter control block
+[>END<]!$[FingerTextData FingerTextData]@#
+ph_common
+Lang:ASP
+// Common Placeholders :
+    $Form               // Insert the form, if one has been defined
+    $Content            // Insert Content authored in the backend
+    $Layout             // Inserts the Layout
+    $Title              // Inserts the page Title
+    $MetaTags           // In the head, inserts page title, keywords, description text and metatags
+    $MetaTags(false)    // $MetaTags with no <title> tag
+    $MenuTitle          // Inserts the content of the 'navigation label' field. For Menu Text.
+    $Breadcrumbs        // Inserts the Breadcrumbs trail showing current position in site
+    $URLSegment         // Inserts the path without the base URL or domain name
+    $BaseHref           // Inserts the base URL of the current site
+    $PageComments       // Inserts the page comments and comment form, if it has been enabled
+[>END<]!$[FingerTextData FingerTextData]@#
+ph
+Lang:ASP
+$[![(cha)ph_dataobjectset]!]
+$[![(cha)ph_common]!]
+[>END<]!$[FingerTextData FingerTextData]@#
+menu
+Lang:ASP
+<% control Menu(1) %>
+    <%-- getMenu() is a method of ContentController --%>
+    <%-- The parameter is the level of the menu. Level 1 is the main menu --%>
+    <%-- Returns a DataObjectSet of Pages --%>
+<% end_control %>
+[>END<]!$[FingerTextData FingerTextData]@#
+logout
+Lang:ASP
+<a href="Security/logout" title="Logout">Logout</a>[>END<]!$[FingerTextData FingerTextData]@#
+login_logout
+Lang:ASP
+<% if CurrentMember %>
+    $[![(cha)logout]!]
+<% else %>
+    $[![(cha)login]!]
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+login
+Lang:ASP
+<a href="Security/login" title="Login">Login</a>[>END<]!$[FingerTextData FingerTextData]@#
+ifs
+Lang:ASP
+$[![(cha)if_dataobjectset]!]
+$[![(cha)if_inpast]!]
+$[![(cha)if_member]!]
+[>END<]!$[FingerTextData FingerTextData]@#
+if_pastvisitor
+Lang:ASP
+<% if PastVisitor %>
+    <%-- PastVisitor returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_pastmember
+Lang:ASP
+<% if PastMember %>
+    <%-- PastMember returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_odd
+Lang:ASP
+<% if Odd %>
+    <%-- Odd returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_middle
+Lang:ASP
+<% if Middle %>
+    <%-- Middle returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_member
+Lang:ASP
+$[![(cha)if_pastmember]!]
+$[![(cha)if_pastvisitor]!]
+$[![(cha)if_currentmember]!]
+[>END<]!$[FingerTextData FingerTextData]@#
+if_last
+Lang:ASP
+<% if Last %>
+    <%-- InPast returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_inpast
+Lang:ASP
+<% if MyDate.InPast %>
+    <%-- InPast returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_first
+Lang:ASP
+<% if First %>
+    <%-- First returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_even
+Lang:ASP
+<% if Even %>
+    <%-- Even returns True or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if_dataobjectset
+Lang:ASP
+$[![(cha)if_even]!]
+$[![(cha)if_odd]!]
+$[![(cha)if_first]!]
+$[![(cha)if_last]!]
+$[![(cha)if_middle]!]
+[>END<]!$[FingerTextData FingerTextData]@#
+if_currentmember
+Lang:ASP
+<% if CurrentMember %>
+    <%-- CurrentMember returns a Member DataObject or False --%>
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+if
+Lang:ASP
+<% if Foo %>
+    
+<% else if Bar %>
+    
+<% else %>
+    
+<% end_if %>
+[>END<]!$[FingerTextData FingerTextData]@#
+elseif
+Lang:ASP
+<% else if Foo %>
+[>END<]!$[FingerTextData FingerTextData]@#
+else
+Lang:ASP
+<% else %>
+[>END<]!$[FingerTextData FingerTextData]@#
+control
+Lang:ASP
+<% control Foo %>
+    $Bar
+<% end_control %>
+[>END<]!$[FingerTextData FingerTextData]@#
+comment
+Lang:ASP
+<%--  --%>
+[>END<]!$[FingerTextData FingerTextData]@#
+childrenof
+Lang:ASP
+<% control ChildrenOf(page-url) %>
+    <%-- ChildrenOf() is a method of ContentController --%>
+    <%-- The parameter is the page url from which all children page will be returned --%>
+    <%-- Returns a DataObjectSet of Pages --%>
+<% end_control %>
+[>END<]!$[FingerTextData FingerTextData]@#
+breadcrumbs
+Lang:ASP
+<% control Breadcrumbs %>
+    <%-- Or $Breadcrumbs --%>
+    <%-- Parameters: (int $maxDepth=20, boolean $unlinked=false, string $stopAtPageType=false, boolean $showHidden=false) --%>
+    $Me <%-- Outputs the returned breadcrumbs string --%>
+<% end_control %>[>END<]!$[FingerTextData FingerTextData]@#
